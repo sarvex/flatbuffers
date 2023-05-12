@@ -72,5 +72,4 @@ class MonsterT(object):
     # MonsterT
     def Pack(self, builder):
         MonsterStart(builder)
-        monster = MonsterEnd(builder)
-        return monster
+        return MonsterEnd(builder)

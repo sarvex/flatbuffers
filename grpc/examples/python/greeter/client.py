@@ -25,7 +25,7 @@ def say_many_hellos(stub, hello_request):
 def main():
     args = parser.parse_args()
 
-    with grpc.insecure_channel('localhost:' + args.port) as channel:
+    with grpc.insecure_channel(f'localhost:{args.port}') as channel:
         builder = flatbuffers.Builder()		
         ind = builder.CreateString(args.name)
         HelloRequest.HelloRequestStart(builder)

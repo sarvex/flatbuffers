@@ -31,9 +31,7 @@ class EnumVal(object):
     # EnumVal
     def Name(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+        return self._tab.String(o + self._tab.Pos) if o != 0 else None
 
     # EnumVal
     def Value(self):
@@ -64,9 +62,7 @@ class EnumVal(object):
     # EnumVal
     def DocumentationLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # EnumVal
     def DocumentationIsNone(self):
@@ -89,9 +85,7 @@ class EnumVal(object):
     # EnumVal
     def AttributesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # EnumVal
     def AttributesIsNone(self):

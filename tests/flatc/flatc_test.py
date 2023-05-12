@@ -34,7 +34,7 @@ root_path = script_path.parent.parent.absolute()
 # Get the location of the flatc executable, reading from the first command line
 # argument or defaulting to default names.
 flatc_exe = Path(
-    ("flatc" if not platform.system() == "Windows" else "flatc.exe")
+    ("flatc" if platform.system() != "Windows" else "flatc.exe")
     if not args.flatc
     else args.flatc
 )
@@ -43,7 +43,7 @@ flatc_exe = Path(
 if root_path in flatc_exe.parents:
     flatc_exe = flatc_exe.relative_to(root_path)
 flatc_path = Path(root_path, flatc_exe)
-assert flatc_path.exists(), "Cannot find the flatc compiler " + str(flatc_path)
+assert flatc_path.exists(), f"Cannot find the flatc compiler {str(flatc_path)}"
 
 # Execute the flatc compiler with the specified parameters
 def flatc(options, cwd=script_path):
@@ -61,31 +61,27 @@ def make_absolute(filename, path=script_path):
 
 def assert_file_exists(filename, path=script_path):
     file = Path(path, filename)
-    assert file.exists(), "could not find file: " + filename
+    assert file.exists(), f"could not find file: {filename}"
     return file
 
 
 def assert_file_doesnt_exists(filename, path=script_path):
     file = Path(path, filename)
-    assert not file.exists(), "file exists but shouldn't: " + filename
+    assert not file.exists(), f"file exists but shouldn't: {filename}"
     return file
 
 
 def get_file_contents(filename, path=script_path):
     file = Path(path, filename)
     contents = ""
-    with open(file) as file:
-        contents = file.read()
-    return contents
+    return Path(file).read_text()
 
 
 def assert_file_contains(file, needles):
     with open(file) as file:
         contents = file.read()
         for needle in [needles] if isinstance(needles, str) else needles:
-            assert needle in contents, (
-                "coudn't find '" + needle + "' in file: " + str(file)
-            )
+            assert needle in contents, f"coudn't find '{needle}' in file: {str(file)}"
     return file
 
 
@@ -93,9 +89,9 @@ def assert_file_doesnt_contains(file, needles):
     with open(file) as file:
         contents = file.read()
         for needle in [needles] if isinstance(needles, str) else needles:
-            assert needle not in contents, (
-                "Found unexpected '" + needle + "' in file: " + str(file)
-            )
+            assert (
+                needle not in contents
+            ), f"Found unexpected '{needle}' in file: {str(file)}"
     return file
 
 
@@ -127,7 +123,7 @@ def run_all(*modules):
                 print(" [PASSED]")
                 module_passing = module_passing + 1
             except Exception as e:
-                print(" [FAILED]: " + str(e))
+                print(f" [FAILED]: {str(e)}")
                 module_failing = module_failing + 1
         print(
             "{0}: {1} of {2} passsed".format(

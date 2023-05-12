@@ -131,26 +131,23 @@ class NestedStructT(object):
     def _UnPack(self, nestedStruct):
         if nestedStruct is None:
             return
-        if not nestedStruct.AIsNone():
-            if np is None:
+        if np is None:
+            if not nestedStruct.AIsNone():
                 self.a = []
-                for i in range(nestedStruct.ALength()):
-                    self.a.append(nestedStruct.A(i))
-            else:
-                self.a = nestedStruct.AAsNumpy()
+                self.a.extend(nestedStruct.A(i) for i in range(nestedStruct.ALength()))
+        elif not nestedStruct.AIsNone():
+            self.a = nestedStruct.AAsNumpy()
         self.b = nestedStruct.B()
         if not nestedStruct.CIsNone():
             if np is None:
                 self.c = []
-                for i in range(nestedStruct.CLength()):
-                    self.c.append(nestedStruct.C(i))
+                self.c.extend(nestedStruct.C(i) for i in range(nestedStruct.CLength()))
             else:
                 self.c = nestedStruct.CAsNumpy()
         if not nestedStruct.DIsNone():
             if np is None:
                 self.d = []
-                for i in range(nestedStruct.DLength()):
-                    self.d.append(nestedStruct.D(i))
+                self.d.extend(nestedStruct.D(i) for i in range(nestedStruct.DLength()))
             else:
                 self.d = nestedStruct.DAsNumpy()
 

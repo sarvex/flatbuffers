@@ -72,5 +72,4 @@ class InParentNamespaceT(object):
     # InParentNamespaceT
     def Pack(self, builder):
         InParentNamespaceStart(builder)
-        inParentNamespace = InParentNamespaceEnd(builder)
-        return inParentNamespace
+        return InParentNamespaceEnd(builder)

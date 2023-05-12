@@ -80,5 +80,4 @@ class SecondTableInAT(object):
         SecondTableInAStart(builder)
         if self.referToC is not None:
             SecondTableInAAddReferToC(builder, referToC)
-        secondTableInA = SecondTableInAEnd(builder)
-        return secondTableInA
+        return SecondTableInAEnd(builder)

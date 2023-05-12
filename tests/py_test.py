@@ -113,18 +113,12 @@ class TestWireFormat(unittest.TestCase):
             sizePrefix=sizePrefix,
             file_identifier=file_identifier)
 
-    # Verify that the canonical flatbuffer file is readable by the
-    # generated Python code. Note that context managers are not part of
-    # Python 2.5, so we use the simpler open/close methods here:
-    f = open('monsterdata_test.mon', 'rb')
-    canonicalWireData = f.read()
-    f.close()
+    with open('monsterdata_test.mon', 'rb') as f:
+      canonicalWireData = f.read()
     CheckReadBuffer(bytearray(canonicalWireData), 0, file_identifier=b'MONS')
 
-    # Write the generated buffer out to a file:
-    f = open('monsterdata_python_wire.mon', 'wb')
-    f.write(gen_buf[gen_off:])
-    f.close()
+    with open('monsterdata_python_wire.mon', 'wb') as f:
+      f.write(gen_buf[gen_off:])
 
 
 class TestObjectBasedAPI(unittest.TestCase):
@@ -334,8 +328,7 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
     """
     b = flatbuffers.Builder(0)
     b.Finish(monsterT.Pack(b))
-    monster = _MONSTER.Monster.GetRootAs(b.Bytes, b.Head())
-    return monster
+    return _MONSTER.Monster.GetRootAs(b.Bytes, b.Head())
 
   def _create_and_load_object_class(self, b):
     """ Finishs the creation of a monster flatbuffer and loads it into an
@@ -452,9 +445,7 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
     self.assertFalse(monster.Test4IsNone())
 
   def test_mutate_testarrayofstring(self):
-    self.monsterT.testarrayofstring = []
-    self.monsterT.testarrayofstring.append('test1')
-    self.monsterT.testarrayofstring.append('test2')
+    self.monsterT.testarrayofstring = ['test1', 'test2']
     monster = self._pack_and_load_buf_class(self.monsterT)
     self.assertEqual(monster.Testarrayofstring(0), b'test1')
     self.assertEqual(monster.Testarrayofstring(1), b'test2')
@@ -469,9 +460,7 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
     monsterT0.hp = 200
     monsterT1 = _MONSTER.MonsterT()
     monsterT1.hp = 400
-    self.monsterT.testarrayoftables = []
-    self.monsterT.testarrayoftables.append(monsterT0)
-    self.monsterT.testarrayoftables.append(monsterT1)
+    self.monsterT.testarrayoftables = [monsterT0, monsterT1]
     monster = self._pack_and_load_buf_class(self.monsterT)
     self.assertEqual(monster.Testarrayoftables(0).Hp(), 200)
     self.assertEqual(monster.Testarrayoftables(1).Hp(), 400)
@@ -525,10 +514,7 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
     self.assertEqual(monster.Testhashu64Fnv1a(), 8)
 
   def test_mutate_testarrayofbools(self):
-    self.monsterT.testarrayofbools = []
-    self.monsterT.testarrayofbools.append(True)
-    self.monsterT.testarrayofbools.append(True)
-    self.monsterT.testarrayofbools.append(False)
+    self.monsterT.testarrayofbools = [True, True, False]
     monster = self._pack_and_load_buf_class(self.monsterT)
     self.assertEqual(monster.Testarrayofbools(0), True)
     self.assertEqual(monster.Testarrayofbools(1), True)
@@ -545,12 +531,7 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
     self.assertEqual(monster.Testf(), 2.0)
 
   def test_mutate_vectoroflongs(self):
-    self.monsterT.vectorOfLongs = []
-    self.monsterT.vectorOfLongs.append(1)
-    self.monsterT.vectorOfLongs.append(100)
-    self.monsterT.vectorOfLongs.append(10000)
-    self.monsterT.vectorOfLongs.append(1000000)
-    self.monsterT.vectorOfLongs.append(100000000)
+    self.monsterT.vectorOfLongs = [1, 100, 10000, 1000000, 100000000]
     monster = self._pack_and_load_buf_class(self.monsterT)
     self.assertEqual(monster.VectorOfLongs(0), 1)
     self.assertEqual(monster.VectorOfLongs(1), 100)
@@ -564,10 +545,11 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
     self.assertFalse(monster.VectorOfLongsIsNone())
 
   def test_mutate_vectorofdoubles(self):
-    self.monsterT.vectorOfDoubles = []
-    self.monsterT.vectorOfDoubles.append(-1.7976931348623157e+308)
-    self.monsterT.vectorOfDoubles.append(0)
-    self.monsterT.vectorOfDoubles.append(1.7976931348623157e+308)
+    self.monsterT.vectorOfDoubles = [
+        -1.7976931348623157e308,
+        0,
+        1.7976931348623157e308,
+    ]
     monster = self._pack_and_load_buf_class(self.monsterT)
     self.assertEqual(monster.VectorOfDoubles(0), -1.7976931348623157e+308)
     self.assertEqual(monster.VectorOfDoubles(1), 0)
@@ -587,10 +569,11 @@ class TestAllMutableCodePathsOfExampleSchema(unittest.TestCase):
                    _IN_PARENT_NAMESPACE.InParentNamespace))
 
   def test_mutate_vectorofEnums(self):
-    self.monsterT.vectorOfEnums = []
-    self.monsterT.vectorOfEnums.append(_COLOR.Color.Red)
-    self.monsterT.vectorOfEnums.append(_COLOR.Color.Blue)
-    self.monsterT.vectorOfEnums.append(_COLOR.Color.Red)
+    self.monsterT.vectorOfEnums = [
+        _COLOR.Color.Red,
+        _COLOR.Color.Blue,
+        _COLOR.Color.Red,
+    ]
     monster = self._pack_and_load_buf_class(self.monsterT)
     self.assertEqual(monster.VectorOfEnums(0), _COLOR.Color.Red)
     self.assertEqual(monster.VectorOfEnums(1), _COLOR.Color.Blue)
@@ -834,7 +817,7 @@ class TestFuzz(unittest.TestCase):
 
     def check(table, desc, want, got):
       stats[desc] += 1
-      self.assertEqual(want, got, '%s != %s, %s' % (want, got, desc))
+      self.assertEqual(want, got, f'{want} != {got}, {desc}')
 
     l = LCG()  # Reset.
 
@@ -887,8 +870,11 @@ class TestFuzz(unittest.TestCase):
           raise RuntimeError('unreachable')
 
     # If enough checks were made, verify that all scalar types were used:
-    self.assertEqual(testValuesMax, len(stats),
-                     'fuzzing failed to test all scalar types: %s' % stats)
+    self.assertEqual(
+        testValuesMax,
+        len(stats),
+        f'fuzzing failed to test all scalar types: {stats}',
+    )
 
 
 class TestByteLayout(unittest.TestCase):
@@ -897,9 +883,7 @@ class TestByteLayout(unittest.TestCase):
   def assertBuilderEquals(self, builder, want_chars_or_ints):
 
     def integerize(x):
-      if isinstance(x, compat.string_types):
-        return ord(x)
-      return x
+      return ord(x) if isinstance(x, compat.string_types) else x
 
     want_ints = list(map(integerize, want_chars_or_ints))
     want = bytearray(want_ints)
@@ -2775,14 +2759,10 @@ def CheckAgainstGoldDataGo():
       print('Go-generated data does not exist, failed.')
       return False
 
-    # would like to use a context manager here, but it's less
-    # backwards-compatible:
-    f = open(fn, 'rb')
-    go_wire_data = f.read()
-    f.close()
-
+    with open(fn, 'rb') as f:
+      go_wire_data = f.read()
     CheckReadBuffer(bytearray(go_wire_data), 0)
-    if not bytearray(gen_buf[gen_off:]) == bytearray(go_wire_data):
+    if bytearray(gen_buf[gen_off:]) != bytearray(go_wire_data):
       raise AssertionError('CheckAgainstGoldDataGo failed')
   except:
     print('Failed to test against Go-generated test data.')
@@ -2801,10 +2781,8 @@ def CheckAgainstGoldDataJava():
     if not os.path.exists(fn):
       print('Java-generated data does not exist, failed.')
       return False
-    f = open(fn, 'rb')
-    java_wire_data = f.read()
-    f.close()
-
+    with open(fn, 'rb') as f:
+      java_wire_data = f.read()
     CheckReadBuffer(bytearray(java_wire_data), 0)
   except:
     print('Failed to read Java-generated test data.')
@@ -2923,7 +2901,7 @@ def backward_compatible_run_tests(**kwargs):
     try:
       unittest.main(**kwargs)
     except SystemExit as e:
-      if not e.code == 0:
+      if e.code != 0:
         return False
     return True
 
@@ -2931,16 +2909,13 @@ def backward_compatible_run_tests(**kwargs):
   kwargs['exit'] = False
   kwargs['verbosity'] = 0
   ret = unittest.main(**kwargs)
-  if ret.result.errors or ret.result.failures:
-    return False
-
-  return True
+  return not ret.result.errors and not ret.result.failures
 
 
 def main():
   import os
   import sys
-  if not len(sys.argv) == 5:
+  if len(sys.argv) != 5:
     sys.stderr.write('Usage: %s <benchmark vtable count> '
                      '<benchmark read count> <benchmark build count> '
                      '<is_onefile>\n' % sys.argv[0])
@@ -2974,16 +2949,12 @@ def main():
     sys.stderr.flush()
     sys.exit(1)
 
-  # run benchmarks (if 0, they will be a noop):
-  bench_vtable = int(sys.argv[1])
-  bench_traverse = int(sys.argv[2])
-  bench_build = int(sys.argv[3])
-  if bench_vtable:
+  if bench_vtable := int(sys.argv[1]):
     BenchmarkVtableDeduplication(bench_vtable)
-  if bench_traverse:
+  if bench_traverse := int(sys.argv[2]):
     buf, off = make_monster_from_generated_code()
     BenchmarkCheckReadBuffer(bench_traverse, buf, off)
-  if bench_build:
+  if bench_build := int(sys.argv[3]):
     buf, off = make_monster_from_generated_code()
     BenchmarkMakeMonsterFromGeneratedCode(bench_build, len(buf))
 

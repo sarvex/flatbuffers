@@ -31,9 +31,7 @@ class Enum(object):
     # Enum
     def Name(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+        return self._tab.String(o + self._tab.Pos) if o != 0 else None
 
     # Enum
     def Values(self, j):
@@ -51,9 +49,7 @@ class Enum(object):
     # Enum
     def ValuesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Enum
     def ValuesIsNone(self):
@@ -94,9 +90,7 @@ class Enum(object):
     # Enum
     def AttributesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Enum
     def AttributesIsNone(self):
@@ -114,9 +108,7 @@ class Enum(object):
     # Enum
     def DocumentationLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Enum
     def DocumentationIsNone(self):
@@ -127,9 +119,7 @@ class Enum(object):
     # Enum
     def DeclarationFile(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+        return self._tab.String(o + self._tab.Pos) if o != 0 else None
 
 def EnumStart(builder):
     builder.StartObject(7)

@@ -27,20 +27,15 @@ class GreeterServicer(greeter_grpc_fb.GreeterServicer):
 
     def SayHello(self, request, context):
         r = HelloRequest.HelloRequest().GetRootAs(request, 0)
-        reply = "Unknown"
-        if r.Name():
-            reply = r.Name()
+        reply = r.Name() if r.Name() else "Unknown"
         return build_reply("welcome " + reply.decode('UTF-8'))
 
     def SayManyHellos(self, request, context):
         r = HelloRequest.HelloRequest().GetRootAs(request, 0)
-        reply = "Unknown"
-        if r.Name():
-            reply = r.Name()
-
+        reply = r.Name() if r.Name() else "Unknown"
         for greeting in self.greetings:
             print(type(reply))
-            yield build_reply(greeting + " " + reply.decode('UTF-8'))
+            yield build_reply(f"{greeting} " + reply.decode('UTF-8'))
         
 
 def serve():
@@ -49,7 +44,7 @@ def serve():
     greeter_grpc_fb.add_GreeterServicer_to_server(
         GreeterServicer(), server
     )
-    server.add_insecure_port('[::]:' + args.port)
+    server.add_insecure_port(f'[::]:{args.port}')
     server.start()
     server.wait_for_termination()
 

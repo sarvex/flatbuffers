@@ -62,11 +62,19 @@ class FlatbuffersConan(ConanFile):
         self.copy(pattern="flatc*", dst="bin", src="bin")
         if self.settings.os == "Windows" and self.options.shared:
             if self.settings.compiler == "Visual Studio":
-                shutil.move(os.path.join(self.package_folder, "lib", "%s.dll" % self.name),
-                            os.path.join(self.package_folder, "bin", "%s.dll" % self.name))
+                shutil.move(
+                    os.path.join(self.package_folder, "lib", f"{self.name}.dll"),
+                    os.path.join(self.package_folder, "bin", f"{self.name}.dll"),
+                )
             elif self.settings.compiler == "gcc":
-                shutil.move(os.path.join(self.package_folder, "lib", "lib%s.dll" % self.name),
-                            os.path.join(self.package_folder, "bin", "lib%s.dll" % self.name))
+                shutil.move(
+                    os.path.join(
+                        self.package_folder, "lib", f"lib{self.name}.dll"
+                    ),
+                    os.path.join(
+                        self.package_folder, "bin", f"lib{self.name}.dll"
+                    ),
+                )
 
     def package_info(self):
         """Collect built libraries names and solve flatc path.

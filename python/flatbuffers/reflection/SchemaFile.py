@@ -35,9 +35,7 @@ class SchemaFile(object):
     # SchemaFile
     def Filename(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+        return self._tab.String(o + self._tab.Pos) if o != 0 else None
 
     # Names of included files, relative to project root.
     # SchemaFile
@@ -51,9 +49,7 @@ class SchemaFile(object):
     # SchemaFile
     def IncludedFilenamesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # SchemaFile
     def IncludedFilenamesIsNone(self):

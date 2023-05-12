@@ -87,5 +87,4 @@ class ReferrableT(object):
     def Pack(self, builder):
         ReferrableStart(builder)
         ReferrableAddId(builder, self.id)
-        referrable = ReferrableEnd(builder)
-        return referrable
+        return ReferrableEnd(builder)

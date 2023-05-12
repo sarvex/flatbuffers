@@ -144,5 +144,4 @@ class TableInFirstNST(object):
         if self.fooStruct is not None:
             fooStruct = self.fooStruct.Pack(builder)
             TableInFirstNSAddFooStruct(builder, fooStruct)
-        tableInFirstNS = TableInFirstNSEnd(builder)
-        return tableInFirstNS
+        return TableInFirstNSEnd(builder)

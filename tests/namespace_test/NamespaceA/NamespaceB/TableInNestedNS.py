@@ -69,5 +69,4 @@ class TableInNestedNST(object):
     def Pack(self, builder):
         TableInNestedNSStart(builder)
         TableInNestedNSAddFoo(builder, self.foo)
-        tableInNestedNS = TableInNestedNSEnd(builder)
-        return tableInNestedNS
+        return TableInNestedNSEnd(builder)

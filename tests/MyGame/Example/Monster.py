@@ -57,9 +57,7 @@ class Monster(object):
     # Monster
     def Name(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+        return self._tab.String(o + self._tab.Pos) if o != 0 else None
 
     # Monster
     def Inventory(self, j):
@@ -79,9 +77,7 @@ class Monster(object):
     # Monster
     def InventoryLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def InventoryIsNone(self):
@@ -127,9 +123,7 @@ class Monster(object):
     # Monster
     def Test4Length(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def Test4IsNone(self):
@@ -147,9 +141,7 @@ class Monster(object):
     # Monster
     def TestarrayofstringLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def TestarrayofstringIsNone(self):
@@ -174,9 +166,7 @@ class Monster(object):
     # Monster
     def TestarrayoftablesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def TestarrayoftablesIsNone(self):
@@ -220,9 +210,7 @@ class Monster(object):
     # Monster
     def TestnestedflatbufferLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def TestnestedflatbufferIsNone(self):
@@ -321,9 +309,7 @@ class Monster(object):
     # Monster
     def TestarrayofboolsLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def TestarrayofboolsIsNone(self):
@@ -362,9 +348,7 @@ class Monster(object):
     # Monster
     def Testarrayofstring2Length(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def Testarrayofstring2IsNone(self):
@@ -386,9 +370,7 @@ class Monster(object):
     # Monster
     def TestarrayofsortedstructLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def TestarrayofsortedstructIsNone(self):
@@ -413,9 +395,7 @@ class Monster(object):
     # Monster
     def FlexLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def FlexIsNone(self):
@@ -437,9 +417,7 @@ class Monster(object):
     # Monster
     def Test5Length(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def Test5IsNone(self):
@@ -464,9 +442,7 @@ class Monster(object):
     # Monster
     def VectorOfLongsLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfLongsIsNone(self):
@@ -491,9 +467,7 @@ class Monster(object):
     # Monster
     def VectorOfDoublesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfDoublesIsNone(self):
@@ -527,9 +501,7 @@ class Monster(object):
     # Monster
     def VectorOfReferrablesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfReferrablesIsNone(self):
@@ -561,9 +533,7 @@ class Monster(object):
     # Monster
     def VectorOfWeakReferencesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfWeakReferencesIsNone(self):
@@ -586,9 +556,7 @@ class Monster(object):
     # Monster
     def VectorOfStrongReferrablesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfStrongReferrablesIsNone(self):
@@ -620,9 +588,7 @@ class Monster(object):
     # Monster
     def VectorOfCoOwningReferencesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfCoOwningReferencesIsNone(self):
@@ -654,9 +620,7 @@ class Monster(object):
     # Monster
     def VectorOfNonOwningReferencesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfNonOwningReferencesIsNone(self):
@@ -715,9 +679,7 @@ class Monster(object):
     # Monster
     def VectorOfEnumsLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def VectorOfEnumsIsNone(self):
@@ -757,9 +719,7 @@ class Monster(object):
     # Monster
     def TestrequirednestedflatbufferLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def TestrequirednestedflatbufferIsNone(self):
@@ -782,9 +742,7 @@ class Monster(object):
     # Monster
     def ScalarKeySortedTablesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # Monster
     def ScalarKeySortedTablesIsNone(self):

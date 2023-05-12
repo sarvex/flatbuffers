@@ -31,9 +31,7 @@ class RPCCall(object):
     # RPCCall
     def Name(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+        return self._tab.String(o + self._tab.Pos) if o != 0 else None
 
     # RPCCall
     def Request(self):
@@ -73,9 +71,7 @@ class RPCCall(object):
     # RPCCall
     def AttributesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # RPCCall
     def AttributesIsNone(self):
@@ -93,9 +89,7 @@ class RPCCall(object):
     # RPCCall
     def DocumentationLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # RPCCall
     def DocumentationIsNone(self):

@@ -116,9 +116,7 @@ class TypeAliases(object):
     # TypeAliases
     def V8Length(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # TypeAliases
     def V8IsNone(self):
@@ -143,9 +141,7 @@ class TypeAliases(object):
     # TypeAliases
     def Vf64Length(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # TypeAliases
     def Vf64IsNone(self):
@@ -301,18 +297,16 @@ class TypeAliasesT(object):
         self.u64 = typeAliases.U64()
         self.f32 = typeAliases.F32()
         self.f64 = typeAliases.F64()
-        if not typeAliases.V8IsNone():
-            if np is None:
+        if np is None:
+            if not typeAliases.V8IsNone():
                 self.v8 = []
-                for i in range(typeAliases.V8Length()):
-                    self.v8.append(typeAliases.V8(i))
-            else:
-                self.v8 = typeAliases.V8AsNumpy()
+                self.v8.extend(typeAliases.V8(i) for i in range(typeAliases.V8Length()))
+        elif not typeAliases.V8IsNone():
+            self.v8 = typeAliases.V8AsNumpy()
         if not typeAliases.Vf64IsNone():
             if np is None:
                 self.vf64 = []
-                for i in range(typeAliases.Vf64Length()):
-                    self.vf64.append(typeAliases.Vf64(i))
+                self.vf64.extend(typeAliases.Vf64(i) for i in range(typeAliases.Vf64Length()))
             else:
                 self.vf64 = typeAliases.Vf64AsNumpy()
 
@@ -349,5 +343,4 @@ class TypeAliasesT(object):
             TypeAliasesAddV8(builder, v8)
         if self.vf64 is not None:
             TypeAliasesAddVf64(builder, vf64)
-        typeAliases = TypeAliasesEnd(builder)
-        return typeAliases
+        return TypeAliasesEnd(builder)

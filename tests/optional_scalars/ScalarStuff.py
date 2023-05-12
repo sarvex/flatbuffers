@@ -647,5 +647,4 @@ class ScalarStuffT(object):
         ScalarStuffAddJustEnum(builder, self.justEnum)
         ScalarStuffAddMaybeEnum(builder, self.maybeEnum)
         ScalarStuffAddDefaultEnum(builder, self.defaultEnum)
-        scalarStuff = ScalarStuffEnd(builder)
-        return scalarStuff
+        return ScalarStuffEnd(builder)

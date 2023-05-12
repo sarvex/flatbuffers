@@ -15,14 +15,15 @@
 """ A tiny version of `six` to help with backwards compability. Also includes
  compatibility helpers for numpy. """
 
+
 import sys
 
 PY2 = sys.version_info[0] == 2
-PY26 = sys.version_info[0:2] == (2, 6)
-PY27 = sys.version_info[0:2] == (2, 7)
-PY275 = sys.version_info[0:3] >= (2, 7, 5)
+PY26 = sys.version_info[:2] == (2, 6)
+PY27 = sys.version_info[:2] == (2, 7)
+PY275 = sys.version_info[:3] >= (2, 7, 5)
 PY3 = sys.version_info[0] == 3
-PY34 = sys.version_info[0:2] >= (3, 4)
+PY34 = sys.version_info[:2] >= (3, 4)
 
 if PY3:
     import importlib.machinery
@@ -34,10 +35,7 @@ if PY3:
 else:
     import imp
     string_types = (unicode,)
-    if PY26 or PY27:
-        binary_types = (str,bytearray)
-    else:
-        binary_types = (str,)
+    binary_types = (str, bytearray) if PY26 or PY27 else (str, )
     range_func = xrange
     if PY26 or (PY27 and not PY275):
         memoryview_type = buffer

@@ -177,5 +177,4 @@ class Vec3T(object):
         if self.test3 is not None:
             test3 = self.test3.Pack(builder)
             Vec3AddTest3(builder, test3)
-        vec3 = Vec3End(builder)
-        return vec3
+        return Vec3End(builder)

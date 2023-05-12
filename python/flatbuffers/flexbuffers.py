@@ -55,7 +55,7 @@ class BitWidth(enum.IntEnum):
     elif value < (1 << 64):
       return BitWidth.W64
     else:
-      raise ValueError('value is too big to encode: %s' % value)
+      raise ValueError(f'value is too big to encode: {value}')
 
   @staticmethod
   def I(value):
@@ -95,7 +95,7 @@ F = {4: 'f', 8: 'd'}  # Floating point formats
 
 
 def _Unpack(fmt, buf):
-  return struct.unpack('<%s' % fmt[len(buf)], buf)[0]
+  return struct.unpack(f'<{fmt[len(buf)]}', buf)[0]
 
 
 def _UnpackVector(fmt, buf, length):
@@ -104,7 +104,7 @@ def _UnpackVector(fmt, buf, length):
 
 
 def _Pack(fmt, value, byte_width):
-  return struct.pack('<%s' % fmt[byte_width], value)
+  return struct.pack(f'<{fmt[byte_width]}', value)
 
 
 def _PackVector(fmt, values, byte_width):
@@ -154,9 +154,7 @@ def _LowerBound(values, value, pred):
 def _BinarySearch(values, value, pred=lambda x, y: x < y):
   """Implementation of C++ std::binary_search() algorithm."""
   index = _LowerBound(values, value, pred)
-  if index != len(values) and not pred(value, values[index]):
-    return index
-  return -1
+  return index if index != len(values) and not pred(value, values[index]) else -1
 
 
 class Type(enum.IntEnum):
@@ -260,9 +258,8 @@ class Type(enum.IntEnum):
     if fixed_len == 0:
       if not Type.IsTypedVectorElementType(element_type):
         raise ValueError('must be typed vector element type')
-    else:
-      if not Type.IsFixedTypedVectorElementType(element_type):
-        raise ValueError('must be fixed typed vector element type')
+    elif not Type.IsFixedTypedVectorElementType(element_type):
+      raise ValueError('must be fixed typed vector element type')
 
     offset = element_type - Type.INT
     if fixed_len == 0:
@@ -274,7 +271,7 @@ class Type(enum.IntEnum):
     elif fixed_len == 4:
       return Type(offset + Type.VECTOR_INT4)  # FixedTypedVector
     else:
-      raise ValueError('unsupported fixed_len: %s' % fixed_len)
+      raise ValueError(f'unsupported fixed_len: {fixed_len}')
 
 
 class Buf:
@@ -336,10 +333,7 @@ class Sized(Object):
 
   def __init__(self, buf, byte_width, size=0):
     super().__init__(buf, byte_width)
-    if size == 0:
-      self._size = _Unpack(U, self.SizeBytes)
-    else:
-      self._size = size
+    self._size = _Unpack(U, self.SizeBytes) if size == 0 else size
 
   @property
   def SizeBytes(self):
@@ -355,7 +349,7 @@ class Blob(Sized):
 
   @property
   def Bytes(self):
-    return self._buf[0:len(self)]
+    return self._buf[:len(self)]
 
   def __repr__(self):
     return 'Blob(%s, size=%d)' % (self._buf, len(self))
@@ -367,7 +361,7 @@ class String(Sized):
 
   @property
   def Bytes(self):
-    return self._buf[0:len(self)]
+    return self._buf[:len(self)]
 
   def Mutate(self, value):
     """Mutates underlying string bytes in place.
@@ -384,7 +378,7 @@ class String(Sized):
     n = len(encoded)
     if n <= len(self):
       self._buf[-self._byte_width:0] = _Pack(U, n, self._byte_width)
-      self._buf[0:n] = encoded
+      self._buf[:n] = encoded
       self._buf[n:len(self)] = bytearray(len(self) - n)
       return True
     return False
@@ -406,7 +400,7 @@ class Key(Object):
 
   @property
   def Bytes(self):
-    return self._buf[0:len(self)]
+    return self._buf[:len(self)]
 
   def __len__(self):
     return self._buf.Find(0)
@@ -494,7 +488,7 @@ class TypedVector(Sized):
     elif self._element_type is Type.STRING:
       return [e.AsString for e in self]
     else:
-      raise TypeError('unsupported element_type: %s' % self._element_type)
+      raise TypeError(f'unsupported element_type: {self._element_type}')
 
   def __repr__(self):
     return 'TypedVector(%s, byte_width=%d, element_type=%s, size=%d)' % \
@@ -564,7 +558,7 @@ class Ref:
     return self._buf[:self._parent_width]
 
   def _ConvertError(self, target_type):
-    raise TypeError('cannot convert %s to %s' % (self._type, target_type))
+    raise TypeError(f'cannot convert {self._type} to {target_type}')
 
   def _Indirect(self):
     return self._buf.Indirect(0, self._parent_width)
@@ -792,11 +786,10 @@ class Ref:
 
   @property
   def AsFixedTypedVector(self):
-    if self.IsFixedTypedVector:
-      element_type, size = Type.ToFixedTypedVectorElementType(self._type)
-      return TypedVector(self._Indirect(), self._byte_width, element_type, size)
-    else:
+    if not self.IsFixedTypedVector:
       raise self._ConvertError('FIXED_TYPED_VECTOR')
+    element_type, size = Type.ToFixedTypedVectorElementType(self._type)
+    return TypedVector(self._Indirect(), self._byte_width, element_type, size)
 
   @property
   def IsMap(self):
@@ -924,7 +917,7 @@ class Value:
     return self._min_bit_width
 
   def __repr__(self):
-    return 'Value(%s, %s, %s)' % (self._value, self._type, self._min_bit_width)
+    return f'Value({self._value}, {self._type}, {self._min_bit_width})'
 
   def __str__(self):
     return str(self._value)
@@ -1053,10 +1046,13 @@ class Builder:
     self._Write(U, relative_offset, byte_width)
 
   def _WriteAny(self, value, byte_width):
-    fmt = {
-        Type.NULL: U, Type.BOOL: U, Type.INT: I, Type.UINT: U, Type.FLOAT: F
-    }.get(value.Type)
-    if fmt:
+    if fmt := {
+        Type.NULL: U,
+        Type.BOOL: U,
+        Type.INT: I,
+        Type.UINT: U,
+        Type.FLOAT: F,
+    }.get(value.Type):
       self._Write(fmt, value.Value, byte_width)
     else:
       self._WriteOffset(value.Value, byte_width)
@@ -1118,9 +1114,8 @@ class Builder:
       if typed:
         if i == 0:
           vector_type = e.Type
-        else:
-          if vector_type != e.Type:
-            raise RuntimeError('typed vector elements must be of the same type')
+        elif vector_type != e.Type:
+          raise RuntimeError('typed vector elements must be of the same type')
 
     if fixed and not Type.IsFixedTypedVectorElementType(vector_type):
       raise RuntimeError('must be fixed typed vector element type')
@@ -1146,11 +1141,10 @@ class Builder:
 
     if keys:
       type_ = Type.MAP
+    elif typed:
+      type_ = Type.ToTypedVector(vector_type, length if fixed else 0)
     else:
-      if typed:
-        type_ = Type.ToTypedVector(vector_type, length if fixed else 0)
-      else:
-        type_ = Type.VECTOR
+      type_ = Type.VECTOR
 
     return Value(loc, type_, bit_width)
 
@@ -1367,7 +1361,7 @@ class Builder:
         self._WriteScalarVector(
             Type.UINT, elements.itemsize, elements, fixed=False)
       else:
-        raise ValueError('unsupported array typecode: %s' % elements.typecode)
+        raise ValueError(f'unsupported array typecode: {elements.typecode}')
     else:
       add = self.Add if element_type is None else self.Adder(element_type)
       with self.TypedVector():
@@ -1404,7 +1398,7 @@ class Builder:
     if element_type is None:
       element_type = {int: Type.INT, float: Type.FLOAT}.get(type_)
       if not element_type:
-        raise TypeError('unsupported element_type: %s' % type_)
+        raise TypeError(f'unsupported element_type: {type_}')
 
     if byte_width == 0:
       width = {
@@ -1430,7 +1424,7 @@ class Builder:
 
     for key in stack[::2]:
       if key.Type is not Type.KEY:
-        raise RuntimeError('all map keys must be of %s type' % Type.KEY)
+        raise RuntimeError(f'all map keys must be of {Type.KEY} type')
 
     pairs = zip(stack[::2], stack[1::2])  # [(key, value), ...]
     pairs = sorted(pairs, key=lambda pair: self._ReadKey(pair[0].Value))
@@ -1504,7 +1498,7 @@ class Builder:
     elif _IsIterable(value):
       self.VectorFromElements(value)
     else:
-      raise TypeError('unsupported python type: %s' % type(value))
+      raise TypeError(f'unsupported python type: {type(value)}')
 
   @property
   def LastValue(self):

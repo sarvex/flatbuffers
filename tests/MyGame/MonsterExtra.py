@@ -103,9 +103,7 @@ class MonsterExtra(object):
     # MonsterExtra
     def DvecLength(self) -> int:
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # MonsterExtra
     def DvecIsNone(self) -> bool:
@@ -130,9 +128,7 @@ class MonsterExtra(object):
     # MonsterExtra
     def FvecLength(self) -> int:
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
+        return self._tab.VectorLen(o) if o != 0 else 0
 
     # MonsterExtra
     def FvecIsNone(self) -> bool:
@@ -285,18 +281,20 @@ class MonsterExtraT(object):
         self.f1 = monsterExtra.F1()
         self.f2 = monsterExtra.F2()
         self.f3 = monsterExtra.F3()
-        if not monsterExtra.DvecIsNone():
-            if np is None:
+        if np is None:
+            if not monsterExtra.DvecIsNone():
                 self.dvec = []
-                for i in range(monsterExtra.DvecLength()):
-                    self.dvec.append(monsterExtra.Dvec(i))
-            else:
-                self.dvec = monsterExtra.DvecAsNumpy()
+                self.dvec.extend(
+                    monsterExtra.Dvec(i) for i in range(monsterExtra.DvecLength())
+                )
+        elif not monsterExtra.DvecIsNone():
+            self.dvec = monsterExtra.DvecAsNumpy()
         if not monsterExtra.FvecIsNone():
             if np is None:
                 self.fvec = []
-                for i in range(monsterExtra.FvecLength()):
-                    self.fvec.append(monsterExtra.Fvec(i))
+                self.fvec.extend(
+                    monsterExtra.Fvec(i) for i in range(monsterExtra.FvecLength())
+                )
             else:
                 self.fvec = monsterExtra.FvecAsNumpy()
 
@@ -331,5 +329,4 @@ class MonsterExtraT(object):
             MonsterExtraAddDvec(builder, dvec)
         if self.fvec is not None:
             MonsterExtraAddFvec(builder, fvec)
-        monsterExtra = MonsterExtraEnd(builder)
-        return monsterExtra
+        return MonsterExtraEnd(builder)

@@ -60,8 +60,7 @@ class Table(object):
 
         off += self.Pos
         off += encode.Get(N.UOffsetTFlags.packer_type, self.Bytes, off)
-        ret = encode.Get(N.UOffsetTFlags.packer_type, self.Bytes, off)
-        return ret
+        return encode.Get(N.UOffsetTFlags.packer_type, self.Bytes, off)
 
     def Vector(self, off):
         """Vector retrieves the start of data of the vector whose offset is
@@ -97,9 +96,7 @@ class Table(object):
         if validator_flags is not None:
             N.enforce_number(d, validator_flags)
         off = self.Offset(slot)
-        if off == 0:
-            return d
-        return self.Get(validator_flags, self.Pos + off)
+        return d if off == 0 else self.Get(validator_flags, self.Pos + off)
 
     def GetVectorAsNumpy(self, flags, off):
         """
@@ -133,6 +130,4 @@ class Table(object):
         N.enforce_number(d, N.VOffsetTFlags)
 
         off = self.Offset(slot)
-        if off == 0:
-            return d
-        return off
+        return d if off == 0 else off

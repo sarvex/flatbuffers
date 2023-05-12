@@ -101,5 +101,4 @@ class ArrayTableT(object):
         if self.a is not None:
             a = self.a.Pack(builder)
             ArrayTableAddA(builder, a)
-        arrayTable = ArrayTableEnd(builder)
-        return arrayTable
+        return ArrayTableEnd(builder)

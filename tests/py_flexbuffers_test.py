@@ -93,7 +93,7 @@ def min_value(type_, byte_width):
   elif type_ in (Type.UINT, Type.INDIRECT_UINT):
     return 0
   else:
-    raise ValueError('Unsupported type %s' % type_)
+    raise ValueError(f'Unsupported type {type_}')
 
 
 def max_value(type_, byte_width):
@@ -104,7 +104,7 @@ def max_value(type_, byte_width):
   elif type_ in (Type.UINT, Type.INDIRECT_UINT):
     return (1 << 8 * byte_width) - 1
   else:
-    raise ValueError('Unsupported type %s' % type_)
+    raise ValueError(f'Unsupported type {type_}')
 
 
 def str_bytes(value, byte_width):

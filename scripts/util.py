@@ -46,7 +46,7 @@ tests_path = Path(root_path, "tests")
 # Get the location of the flatc executable, reading from the first command line
 # argument or defaulting to default names.
 flatc_exe = Path(
-    ("flatc" if not platform.system() == "Windows" else "flatc.exe")
+    ("flatc" if platform.system() != "Windows" else "flatc.exe")
     if not args.flatc
     else args.flatc
 )
@@ -55,7 +55,7 @@ flatc_exe = Path(
 if root_path in flatc_exe.parents:
     flatc_exe = flatc_exe.relative_to(root_path)
 flatc_path = Path(root_path, flatc_exe)
-assert flatc_path.exists(), "Cannot find the flatc compiler " + str(flatc_path)
+assert flatc_path.exists(), f"Cannot find the flatc compiler {str(flatc_path)}"
 
 # Execute the flatc compiler with the specified parameters
 def flatc(options, schema, prefix=None, include=None, data=None, cwd=tests_path):

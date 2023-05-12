@@ -100,5 +100,4 @@ class TableInCT(object):
             TableInCAddReferToA1(builder, referToA1)
         if self.referToA2 is not None:
             TableInCAddReferToA2(builder, referToA2)
-        tableInC = TableInCEnd(builder)
-        return tableInC
+        return TableInCEnd(builder)

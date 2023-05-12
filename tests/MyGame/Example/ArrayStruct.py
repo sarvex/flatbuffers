@@ -144,13 +144,12 @@ class ArrayStructT(object):
         if arrayStruct is None:
             return
         self.a = arrayStruct.A()
-        if not arrayStruct.BIsNone():
-            if np is None:
+        if np is None:
+            if not arrayStruct.BIsNone():
                 self.b = []
-                for i in range(arrayStruct.BLength()):
-                    self.b.append(arrayStruct.B(i))
-            else:
-                self.b = arrayStruct.BAsNumpy()
+                self.b.extend(arrayStruct.B(i) for i in range(arrayStruct.BLength()))
+        elif not arrayStruct.BIsNone():
+            self.b = arrayStruct.BAsNumpy()
         self.c = arrayStruct.C()
         if not arrayStruct.DIsNone():
             self.d = []
@@ -164,8 +163,7 @@ class ArrayStructT(object):
         if not arrayStruct.FIsNone():
             if np is None:
                 self.f = []
-                for i in range(arrayStruct.FLength()):
-                    self.f.append(arrayStruct.F(i))
+                self.f.extend(arrayStruct.F(i) for i in range(arrayStruct.FLength()))
             else:
                 self.f = arrayStruct.FAsNumpy()
 

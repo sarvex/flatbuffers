@@ -84,5 +84,4 @@ class TestSimpleTableWithEnumT(object):
     def Pack(self, builder):
         TestSimpleTableWithEnumStart(builder)
         TestSimpleTableWithEnumAddColor(builder, self.color)
-        testSimpleTableWithEnum = TestSimpleTableWithEnumEnd(builder)
-        return testSimpleTableWithEnum
+        return TestSimpleTableWithEnumEnd(builder)

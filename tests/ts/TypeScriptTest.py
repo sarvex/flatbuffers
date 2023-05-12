@@ -37,14 +37,14 @@ flatc_exe = Path("flatc.exe" if is_windows else "flatc")
 if root_path in flatc_exe.parents:
     flatc_exe = flatc_exe.relative_to(root_path)
 flatc_path = Path(root_path, flatc_exe)
-assert flatc_path.exists(), "Cannot find the flatc compiler " + str(flatc_path)
+assert flatc_path.exists(), f"Cannot find the flatc compiler {str(flatc_path)}"
 
 def check_call(args, cwd=tests_path):
     subprocess.check_call(args, cwd=str(cwd), shell=is_windows)
 
 # Execute the flatc compiler with the specified parameters
 def flatc(options, schema, prefix=None, include=None, data=None, cwd=tests_path):
-    print("Invoking flatc on schema " + str(schema))
+    print(f"Invoking flatc on schema {str(schema)}")
     cmd = [str(flatc_path)] + options
     if prefix:
         cmd += ["-o"] + [prefix]
@@ -57,7 +57,7 @@ def flatc(options, schema, prefix=None, include=None, data=None, cwd=tests_path)
 
 # Execute esbuild with the specified parameters
 def esbuild(input, output):
-    cmd = ["esbuild", input, "--outfile=" + output]
+    cmd = ["esbuild", input, f"--outfile={output}"]
     cmd += ["--format=cjs", "--bundle", "--external:flatbuffers"]
     check_call(cmd)
 
