@@ -1,0 +1,10 @@
+{
+  "extends": ["github>sarvex/renovate-configs:cpp", 
+    "github>sarvex/renovate-configs:js-app",
+    "github>sarvex/renovate-configs:csharp",
+    "github>sarvex/renovate-configs:go",
+    "github>sarvex/renovate-configs:java",
+    "github>sarvex/renovate-configs:python",
+    "github>sarvex/renovate-configs:ruby",
+    "github>sarvex/renovate-configs:swift"]
+}
