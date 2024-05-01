@@ -48,7 +48,7 @@ kotlin {
     val jvmTest by getting {
       dependencies {
         implementation(kotlin("test-junit"))
-        implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
+        implementation("com.google.flatbuffers:flatbuffers-java:2.0.8")
       }
     }
     val jvmMain by getting {
