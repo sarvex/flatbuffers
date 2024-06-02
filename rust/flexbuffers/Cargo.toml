@@ -23,6 +23,6 @@ deserialize_human_readable = []
 [dependencies]
 serde = "1.0.119"
 serde_derive = "1.0.119"
-byteorder = "1.4.2"
+byteorder = "1.5.0"
 num_enum = "0.5.1"
 bitflags = "1.2.1"
